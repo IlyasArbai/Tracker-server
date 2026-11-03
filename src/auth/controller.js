@@ -41,9 +41,13 @@ export class AuthController {
           message: "Invalid credentials",
         });
 
-      const token = jwt.sign({ sub: String(user.id) }, "ok", {
-        expiresIn: "7d",
-      });
+      const token = jwt.sign(
+        { sub: String(user.id) },
+        process.env.JWT_SECRET,
+        {
+          expiresIn: "7d",
+        },
+      );
 
       return res.json({
         success: true,

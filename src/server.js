@@ -13,6 +13,6 @@ app.get("/health", (req, res) => {
   res.status(200).json({ status: "ok" });
 });
 
-app.listen("3000", "0.0.0.0", () => {
+app.listen(process.env.PORT, "0.0.0.0", () => {
   console.log(`Server running on 3000`);
 });
