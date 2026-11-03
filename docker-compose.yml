@@ -4,6 +4,7 @@ services:
       context: .
       dockerfile: Dockerfile
     restart: unless-stopped
+    container_name: tracker-server
     environment:
       NODE_ENV: production
       PORT: "3000"
