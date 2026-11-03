@@ -1,30 +1,24 @@
 
-# Stage 1: Install dependencies and generate Prisma Client
+# Stage 1: Build and prepare dependencies
 FROM node:22-alpine AS build
 
 WORKDIR /app
 
-COPY package.json package-lock.json ./
-RUN npm ci
-
+COPY package*.json ./
 COPY prisma ./prisma
 COPY prisma.config.ts ./
 
-# Prisma 7 config reads DATABASE_URL.
-# This placeholder is used only during image generation.
-RUN DATABASE_URL="postgresql://appuser:buildonly@localhost:5432/appdb" \
-    npx prisma generate
+RUN npm ci
 
-COPY src ./src
+COPY . .
 
-# Keep Prisma CLI in production dependencies for migrations.
+RUN npx prisma generate
 RUN npm prune --omit=dev
 
 # Stage 2: Production runtime
 FROM node:22-alpine AS runtime
 
 ENV NODE_ENV=production
-ENV PORT=3000
 
 WORKDIR /app
 
@@ -35,7 +29,5 @@ COPY --from=build --chown=node:node /app/prisma ./prisma
 COPY --from=build --chown=node:node /app/prisma.config.ts ./prisma.config.ts
 
 USER node
-
-EXPOSE 3000
 
 CMD ["node", "src/server.js"]
