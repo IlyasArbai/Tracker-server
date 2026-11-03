@@ -5,13 +5,14 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     container_name: tracker-server
+    image: tracker
     environment:
       NODE_ENV: production
       PORT: "3000"
       DATABASE_URL: ${DATABASE_URL:?Set DATABASE_URL}
       JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET}
     ports:
-      - "127.0.0.1:3000:3000"
+      - "127.0.0.1:3001:3000"
     networks:
       - postgres-network
     healthcheck:
