@@ -9,7 +9,7 @@ export class AuthController {
       if (await UserRepo.find({ email }))
         return res.json({
           success: false,
-          error: "Email is already registered",
+          message: "Email is already registered",
         });
 
       const hashedPassword = await bcrypt.hash(password, 12);
@@ -26,7 +26,7 @@ export class AuthController {
     } catch (err) {
       return res.json({
         success: false,
-        error: "Registration failed",
+        message: "Registration failed",
       });
     }
   }
@@ -41,13 +41,9 @@ export class AuthController {
           message: "Invalid credentials",
         });
 
-      const token = jwt.sign(
-        { sub: String(user.id) },
-        process.env.JWT_SECRET,
-        {
-          expiresIn: "7d",
-        },
-      );
+      const token = jwt.sign({ sub: String(user.id) }, process.env.JWT_SECRET, {
+        expiresIn: "7d",
+      });
 
       return res.json({
         success: true,
@@ -69,19 +65,19 @@ export class AuthController {
       if (!user) {
         return res.json({
           success: false,
-          error: "User not found",
+          message: "User not found",
         });
       }
 
       if (!(await bcrypt.compare(currentPassword, user.password)))
         return res.json({
           success: false,
-          error: "Current password is incorrect",
+          message: "Current password is incorrect",
         });
       if (currentPassword === newPassword)
         return res.json({
           success: false,
-          error: "New password must differ from current password2",
+          message: "New password must differ from current password2",
         });
 
       const hashedPassword = await bcrypt.hash(newPassword, 12);
@@ -100,7 +96,7 @@ export class AuthController {
       console.log(err);
       return res.json({
         success: false,
-        error: "Failed to change password",
+        message: "Failed to change password",
       });
     }
   }

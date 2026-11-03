@@ -10,7 +10,7 @@ app.use("/auth", AuthRoutes);
 app.use("/tracks", TrackRoutes);
 
 app.get("/health", (req, res) => {
-  res.status(200).json({ status: "ok" });
+  res.status(200).json({ status: "ok updated", project: "tracker-server" });
 });
 
 app.listen(process.env.PORT, "0.0.0.0", () => {
